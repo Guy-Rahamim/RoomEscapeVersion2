@@ -17,8 +17,9 @@ UPositionReporter::UPositionReporter()
 void UPositionReporter::BeginPlay()
 {
 	Super::BeginPlay();
-	//UE_LOG(LogTemp, Warning, TEXT("%s is at location"), *Name)
-	//UE_LOG(LogTemp,Warning,TEXT("%s is at location %s"),*Name,*Location.ToString())fasdnbjkf fadsjkl
+	FString Name = GetOwner()->GetName();
+	FString Location =GetOwner()->GetActorLocation().ToString();
+	UE_LOG(LogTemp,Warning,TEXT("%s is at location %s"),*Name,*Location)
 	
 }
 
