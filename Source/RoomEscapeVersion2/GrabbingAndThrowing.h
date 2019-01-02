@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Engine/StaticMeshActor.h"
+#include "CollisionQueryParams.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "components/InputComponent.h"
@@ -39,10 +40,19 @@ private:
 	FRotator PlayerViewPointRotation;
 	FVector LineTraceEnd;
 	FVector LineTraceDirection;
-	
+	void VisualiseRaycast();
 	FHitResult Hit;
 	float Reach = 160.f;
-	FHitResult VisualiseRayCast();
+	FHitResult Raycast();
 	void ViewInfo();
+
+	UPhysicsHandleComponent *PhysicsHandle = nullptr;
+	UInputComponent* InputComponent = nullptr;
+	void SetupPhysicsHandleAndInputComponent();
+	void Grab();
+	UPrimitiveComponent* Component;
+
+
+	
 		
 };
