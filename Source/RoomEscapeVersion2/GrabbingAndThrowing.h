@@ -54,7 +54,7 @@ private:
 	FVector LineTraceDirection;
 
 	float TraceReach = 200.f;
-	float HandsReach = 100.f;
+	float HandsReach = 130.f;
 	float CrosshairReach = 15.f;
 	FHitResult Raycast();
 

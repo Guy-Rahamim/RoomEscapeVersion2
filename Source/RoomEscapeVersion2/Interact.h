@@ -30,13 +30,20 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	void GetFirstActorHit();
+	void ViewpointInfo();
+	void VisualiseRaycast();
+	void SetupInputComponent();
+	void Use();
+
 private:
 	FVector PlayerViewpointLocation;
 	FRotator PlayerViewpointRotation;
 	FVector LineTraceEnd;
 	FVector LineTraceDirection;
-
-	float Reach = 160.f;
-
+	float add = 1.3;
+	float Reach = 200.f;
+	UInputComponent* InputComponent=nullptr;
+	AActor* LampUsed = nullptr;
 		
 };

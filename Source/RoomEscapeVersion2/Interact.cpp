@@ -18,7 +18,7 @@ void UInteract::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+
 	
 }
 
@@ -28,16 +28,13 @@ void UInteract::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
-		PlayerViewpointLocation, PlayerViewpointRotation);
-	LineTraceDirection = PlayerViewpointRotation.Vector();
-	LineTraceEnd = LineTraceDirection * Reach + PlayerViewpointLocation;
+	ViewpointInfo();
+	SetupInputComponent();
 
-	DrawDebugLine(GetWorld(),
-		PlayerViewpointLocation,
-		LineTraceEnd,
-		FColor(FColor::Red), false,
-		0, 0, 10);
+}
+
+void UInteract::GetFirstActorHit()
+{
 
 	FHitResult Hit;
 	FCollisionQueryParams CollisionParams(FName(TEXT("")), false, GetOwner());
@@ -47,13 +44,47 @@ void UInteract::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 		PlayerViewpointLocation, LineTraceEnd,
 		FCollisionObjectQueryParams(ECollisionChannel::ECC_WorldStatic),
 		CollisionParams);
-	
+
 	AActor* Actor = Hit.GetActor();
-	
+
 	if (Actor)
 	{
-		FString Name = Actor->GetName();
-		UE_LOG(LogTemp, Warning, TEXT("tracing %s"), *Name)
+	FString Name = Actor->GetName();
+		if (Name == "SM_Lamp_Wall_6")
+		{
+			Actor->SetActorRotation(FRotator(32, 245, 300));
+		}
 	}
+}
+
+void UInteract::ViewpointInfo()
+{
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		PlayerViewpointLocation, PlayerViewpointRotation);
+	LineTraceDirection = PlayerViewpointRotation.Vector();
+	LineTraceEnd = LineTraceDirection * Reach + PlayerViewpointLocation;
+}
+
+void UInteract::VisualiseRaycast()
+{
+	DrawDebugLine(GetWorld(),
+		PlayerViewpointLocation,
+		LineTraceEnd,
+		FColor(FColor::Red), false,
+		0, 0, 10);
+}
+
+void UInteract::SetupInputComponent()
+{		
+
+	//{
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+		InputComponent->BindAction("Use", IE_Pressed, this, &UInteract::Use);
+	//}
+}
+
+void UInteract::Use()
+{
+	GetFirstActorHit();
 }
 
