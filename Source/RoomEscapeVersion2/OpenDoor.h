@@ -5,19 +5,18 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Engine/TriggerVolume.h"
-#include "OpenDoorBySpecificActor.generated.h"
+#include "OpenDoor.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOpeningDoor);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDoor);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class ROOMESCAPEVERSION2_API UOpenDoorBySpecificActor : public UActorComponent
+class ROOMESCAPEVERSION2_API UOpenDoor : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UOpenDoorBySpecificActor();
+	UOpenDoor();
 
 protected:
 	// Called when the game starts
@@ -28,17 +27,12 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-	UPROPERTY(Editanywhere)
-		AActor* DoorOpener=nullptr;
+	UPROPERTY(BlueprintAssignable)
+		FDoor Open;
+
+	UPROPERTY(BlueprintAssignable)
+		FDoor Close;
 
 	UPROPERTY(EditAnywhere)
-		ATriggerVolume* Plate=nullptr;
-
-	UPROPERTY(BlueprintAssignable)
-		FOpeningDoor Open;
-
-	UPROPERTY(BlueprintAssignable)
-		FOpeningDoor Close;
-
-		
+		ATriggerVolume* Trigger = nullptr;
 };

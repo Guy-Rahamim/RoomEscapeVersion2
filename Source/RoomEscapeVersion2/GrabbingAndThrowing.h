@@ -34,25 +34,36 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-	
-	FVector PlayerViewPointLocation;
-	FVector LineTraceStart;
-	FRotator PlayerViewPointRotation;
-	FVector LineTraceEnd;
-	FVector LineTraceDirection;
-	void VisualiseRaycast();
+
 	FHitResult Hit;
-	float Reach = 160.f;
-	FHitResult Raycast();
-	void ViewInfo();
+
+
 
 	UPhysicsHandleComponent *PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
-	void SetupPhysicsHandleAndInputComponent();
-	void Grab();
+	
 	UPrimitiveComponent* Component;
 
 
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+	FVector LineTraceStart;
+	FVector LineTraceEnd;
+	FVector CrosshairEnd;
+	FVector HandsEnd;
+	FVector LineTraceDirection;
+
+	float TraceReach = 200.f;
+	float HandsReach = 100.f;
+	float CrosshairReach = 15.f;
+	FHitResult Raycast();
+
+	void Grab();
+	void VisualiseRaycast();
+	void ViewInfo();
+	void SetupPhysicsHandle();
+	void SetupInputComponent();
+	void DrawCrosshair();
 	
 		
 };

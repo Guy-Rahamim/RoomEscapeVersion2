@@ -17,8 +17,8 @@ UGrabbingAndThrowing::UGrabbingAndThrowing()
 void UGrabbingAndThrowing::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	
+	SetupInputComponent();
+	SetupPhysicsHandle();
 }
 
 
@@ -26,14 +26,12 @@ void UGrabbingAndThrowing::BeginPlay()
 void UGrabbingAndThrowing::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	//getting the players viewpoint and location
-	ViewInfo();
-	//VisualiseRaycast();
-	//Raycast();
-	SetupPhysicsHandleAndInputComponent();
+	DrawCrosshair();
 	
-	//ray casting from the players eye height
+	if (PhysicsHandle->GrabbedComponent)
+	{
+		PhysicsHandle->SetTargetLocationAndRotation(HandsEnd,PlayerViewPointRotation);
+	}
 }
 
 void UGrabbingAndThrowing::VisualiseRaycast()
@@ -55,17 +53,20 @@ FHitResult UGrabbingAndThrowing::Raycast()
 
 	FCollisionQueryParams CollisionParams(FName(TEXT("")), false, GetOwner());
 	FHitResult FirstActorHit;
-	GetWorld()->LineTraceSingleByObjectType(FirstActorHit,
+
+	GetWorld()->LineTraceSingleByObjectType(
+		OUT FirstActorHit,
 		PlayerViewPointLocation,
 		LineTraceEnd,
-		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody), CollisionParams);
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
+		CollisionParams);
 
 	//Extracting the actor hit name and logging it
 	AActor* Actor = FirstActorHit.GetActor();
 	if (Actor)
 	{
 		
-		UE_LOG(LogTemp, Warning, TEXT("actor being hit: %s"), *(Actor->GetName()))
+		//UE_LOG(LogTemp, Warning, TEXT("actor being hit: %s"), *(Actor->GetName()))
 	}
 	return FirstActorHit;
 }
@@ -78,17 +79,13 @@ void UGrabbingAndThrowing::ViewInfo()
 		OUT PlayerViewPointRotation);
 	LineTraceDirection = PlayerViewPointRotation.Vector();
 //	LineTraceStart = PlayerViewPointLocation * LineTraceDirection;
-	LineTraceEnd = LineTraceDirection * Reach+PlayerViewPointLocation;
+	LineTraceEnd = LineTraceDirection * TraceReach+PlayerViewPointLocation;
+	CrosshairEnd = LineTraceDirection * CrosshairReach + PlayerViewPointLocation;
+	HandsEnd = LineTraceDirection * HandsReach + PlayerViewPointLocation;
 }
 
-void UGrabbingAndThrowing::SetupPhysicsHandleAndInputComponent()
+void UGrabbingAndThrowing::SetupInputComponent()
 {
-
-	//setting and checking for the physics handle.
-	PhysicsHandle=GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (!PhysicsHandle)
-	{UE_LOG(LogTemp,Error,TEXT("no physicshandle bitch")) }
-
 	//setting and checking for the input component.
 
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
@@ -100,16 +97,48 @@ void UGrabbingAndThrowing::SetupPhysicsHandleAndInputComponent()
 	///binding the action input the a function
 	InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabbingAndThrowing::Grab);
 }
+void UGrabbingAndThrowing::DrawCrosshair()
+{
+	
+	ViewInfo();
+	DrawDebugCrosshairs(
+		GetWorld(),
+		CrosshairEnd,
+		PlayerViewPointRotation,
+		2, //scale
+		FColor(FColor::Black),
+		false, //will the crosshair persist
+		0.1f,//lifetime
+		1);
+}
+void UGrabbingAndThrowing::SetupPhysicsHandle()
+{
+
+	//setting and checking for the physics handle.
+	PhysicsHandle=GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (!PhysicsHandle)
+	{UE_LOG(LogTemp,Error,TEXT("no physicshandle bitch")) }
+
+}
 
 void UGrabbingAndThrowing::Grab()
 {
-	ViewInfo();
-	auto ComponentToGrab = Raycast().GetComponent();
-	if (ComponentToGrab)
+	if (PhysicsHandle->GrabbedComponent)
 	{
-		PhysicsHandle->GrabComponent(ComponentToGrab,
-			NAME_None,
-			ComponentToGrab->GetOwner()->GetActorLocation()
-			, true);
+		PhysicsHandle->ReleaseComponent();
+		return;
 	}
+		auto ComponentToGrab = Raycast().GetComponent();
+	if (!PhysicsHandle->GrabbedComponent)
+	{
+
+		if (ComponentToGrab)
+		{
+				PhysicsHandle->GrabComponentAtLocationWithRotation(ComponentToGrab,
+				NAME_None,
+				ComponentToGrab->GetOwner()->GetActorLocation()
+				, ComponentToGrab->GetOwner()->GetActorRotation());
+			return;		}			
+	}
+
 }

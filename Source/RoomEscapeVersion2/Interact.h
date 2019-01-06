@@ -4,20 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Engine/TriggerVolume.h"
-#include "OpenDoorBySpecificActor.generated.h"
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOpeningDoor);
+#include "DrawDebugHelpers.h"
+#include "CollisionQueryParams.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
+#include "GameFramework/PlayerController.h"
+#include "components/InputComponent.h"
+#include "Components/PrimitiveComponent.h"
+#include "Interact.generated.h"
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class ROOMESCAPEVERSION2_API UOpenDoorBySpecificActor : public UActorComponent
+class ROOMESCAPEVERSION2_API UInteract : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UOpenDoorBySpecificActor();
+	UInteract();
 
 protected:
 	// Called when the game starts
@@ -28,17 +31,12 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
-	UPROPERTY(Editanywhere)
-		AActor* DoorOpener=nullptr;
+	FVector PlayerViewpointLocation;
+	FRotator PlayerViewpointRotation;
+	FVector LineTraceEnd;
+	FVector LineTraceDirection;
 
-	UPROPERTY(EditAnywhere)
-		ATriggerVolume* Plate=nullptr;
-
-	UPROPERTY(BlueprintAssignable)
-		FOpeningDoor Open;
-
-	UPROPERTY(BlueprintAssignable)
-		FOpeningDoor Close;
+	float Reach = 160.f;
 
 		
 };

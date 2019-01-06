@@ -33,9 +33,12 @@ void UOpenDoorBySpecificActor::TickComponent(float DeltaTime, ELevelTick TickTyp
 		if (Plate->IsOverlappingActor(DoorOpener))
 		{
 			//UE_LOG(LogTemp, Error, TEXT("YES actor overlapping"))
-			FString Name = DoorOpener->GetName();
-			UE_LOG(LogTemp, Warning, TEXT("actor overlapping %s"), *Name)
+			//FString Name = DoorOpener->GetName();
+			//UE_LOG(LogTemp, Warning, TEXT("actor overlapping %s"), *Name)
+
+			Open.Broadcast();
 		}
+		else { Close.Broadcast(); }
 	}
 }
 
