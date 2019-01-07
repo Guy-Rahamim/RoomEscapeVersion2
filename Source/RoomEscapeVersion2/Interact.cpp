@@ -18,7 +18,7 @@ void UInteract::BeginPlay()
 {
 	Super::BeginPlay();
 
-
+	SetupInputComponent();
 	
 }
 
@@ -29,7 +29,7 @@ void UInteract::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	ViewpointInfo();
-	SetupInputComponent();
+
 
 }
 
@@ -52,7 +52,8 @@ void UInteract::GetFirstActorHit()
 	FString Name = Actor->GetName();
 		if (Name == "SM_Lamp_Wall_6")
 		{
-			Actor->SetActorRotation(FRotator(32, 245, 300));
+			Actor->SetActorRotation(FRotator(32+add, 245+add, 300+add));
+			add += add;
 		}
 	}
 }
@@ -63,6 +64,7 @@ void UInteract::ViewpointInfo()
 		PlayerViewpointLocation, PlayerViewpointRotation);
 	LineTraceDirection = PlayerViewpointRotation.Vector();
 	LineTraceEnd = LineTraceDirection * Reach + PlayerViewpointLocation;
+
 }
 
 void UInteract::VisualiseRaycast()

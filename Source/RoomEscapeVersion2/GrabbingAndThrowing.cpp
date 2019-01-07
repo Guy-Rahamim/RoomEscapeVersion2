@@ -30,6 +30,7 @@ void UGrabbingAndThrowing::TickComponent(float DeltaTime, ELevelTick TickType, F
 	
 	if (PhysicsHandle->GrabbedComponent)
 	{
+	
 		PhysicsHandle->SetTargetLocationAndRotation(HandsEnd,PlayerViewPointRotation);
 	}
 }
@@ -73,7 +74,6 @@ FHitResult UGrabbingAndThrowing::Raycast()
 
 void UGrabbingAndThrowing::ViewInfo()
 {
-
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
 		OUT PlayerViewPointLocation,
 		OUT PlayerViewPointRotation);
@@ -82,6 +82,7 @@ void UGrabbingAndThrowing::ViewInfo()
 	LineTraceEnd = LineTraceDirection * TraceReach+PlayerViewPointLocation;
 	CrosshairEnd = LineTraceDirection * CrosshairReach + PlayerViewPointLocation;
 	HandsEnd = LineTraceDirection * HandsReach + PlayerViewPointLocation;
+	Impulse = LineTraceDirection * (ImpulsePush);
 }
 
 void UGrabbingAndThrowing::SetupInputComponent()
@@ -89,13 +90,10 @@ void UGrabbingAndThrowing::SetupInputComponent()
 	//setting and checking for the input component.
 
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
-	if (!InputComponent)
-	{
-		UE_LOG(LogTemp, Error, TEXT("no Input Component bitch"))
-	}
 
 	///binding the action input the a function
 	InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabbingAndThrowing::Grab);
+	InputComponent->BindAction("Throw", IE_Pressed, this, &UGrabbingAndThrowing::Throw);
 }
 void UGrabbingAndThrowing::DrawCrosshair()
 {
@@ -111,6 +109,17 @@ void UGrabbingAndThrowing::DrawCrosshair()
 		0.1f,//lifetime
 		1);
 }
+void UGrabbingAndThrowing::Throw()
+{
+	auto ComponentToGrab = Raycast().GetComponent();
+	if (PhysicsHandle->GrabbedComponent)
+	{
+		ViewInfo();
+		PhysicsHandle->GrabbedComponent->AddImpulse(Impulse, NAME_None, true);
+		PhysicsHandle->ReleaseComponent();
+		return;
+	}
+}
 void UGrabbingAndThrowing::SetupPhysicsHandle()
 {
 
@@ -123,12 +132,15 @@ void UGrabbingAndThrowing::SetupPhysicsHandle()
 
 void UGrabbingAndThrowing::Grab()
 {
+		auto ComponentToGrab = Raycast().GetComponent();
 	if (PhysicsHandle->GrabbedComponent)
 	{
+//		ViewInfo();
+	//	PhysicsHandle->GrabbedComponent->AddImpulse(Impulse, NAME_None,true);
 		PhysicsHandle->ReleaseComponent();
 		return;
 	}
-		auto ComponentToGrab = Raycast().GetComponent();
+
 	if (!PhysicsHandle->GrabbedComponent)
 	{
 
