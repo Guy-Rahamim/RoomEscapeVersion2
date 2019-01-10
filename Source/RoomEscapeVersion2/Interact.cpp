@@ -49,13 +49,53 @@ void UInteract::GetFirstActorHit()
 
 	if (Actor)
 	{
-	FString Name = Actor->GetName();
-		if (Name == "SM_Lamp_Wall_6")
+
+		if (Actor->FindComponentByClass<UActivator>())
 		{
-			Actor->SetActorRotation(FRotator(32+add, 245+add, 300+add));
-			add += add;
+			if (something == nullptr)
+			{
+				UE_LOG(LogTemp,Warning,TEXT("DASGASG"))
+				something = Actor->FindComponentByClass<UActivator>();
+				something->UActivator::SetActive(true);
+				return;
+			}
+
+			if (something != nullptr)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("32458658436251"))
+				something->UActivator::SetActive(false);
+				something = nullptr;
+				return;
+			}
+		
 		}
 	}
+
+
+
+
+	return;
+
+
+
+
+
+
+	//if (something)
+	//{
+	//	bool yes = something->UActivator::GetActive();
+	//	bool No = false;
+	//	something->UActivator::SetActive(yes);
+	//	{
+	//		UE_LOG(LogTemp, Warning, TEXT("MyCharacter's Bool is %s"), (yes ? TEXT("True") : TEXT("False")));
+	//	}
+	//	}
+	//FString Name = Hit.GetActor()->GetName();
+	//	if (Name == "SM_Lamp_Wall_6")
+	//	{
+	//		Actor->SetActorRotation(FRotator(32+add, 245+add, 300+add));
+	//}
+	
 }
 
 void UInteract::ViewpointInfo()

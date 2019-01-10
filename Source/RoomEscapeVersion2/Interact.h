@@ -9,6 +9,7 @@
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "components/InputComponent.h"
+#include "Activator.h"
 #include "Components/PrimitiveComponent.h"
 #include "Interact.generated.h"
 
@@ -45,5 +46,5 @@ private:
 	float Reach = 200.f;
 	UInputComponent* InputComponent=nullptr;
 	AActor* LampUsed = nullptr;
-		
+	UActivator* something = nullptr;
 };
