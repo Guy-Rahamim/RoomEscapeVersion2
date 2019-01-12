@@ -38,7 +38,6 @@ void UInteract::GetFirstActorHit()
 
 	FHitResult Hit;
 	FCollisionQueryParams CollisionParams(FName(TEXT("")), false, GetOwner());
-
 	//Line Tracing
 	GetWorld()->LineTraceSingleByObjectType(Hit,
 		PlayerViewpointLocation, LineTraceEnd,
@@ -57,24 +56,28 @@ void UInteract::GetFirstActorHit()
 				UE_LOG(LogTemp,Warning,TEXT("DASGASG"))
 				something = Actor->FindComponentByClass<UActivator>();
 				something->UActivator::SetActive(true);
+				something = nullptr;
+			//	something->UActivator::SetActive(false);
+
 				return;
 			}
 
-			if (something != nullptr)
+/*			if (something != nullptr)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("32458658436251"))
 				something->UActivator::SetActive(false);
 				something = nullptr;
 				return;
-			}
+			*/}
 		
 		}
+	return;
 	}
 
 
 
 
-	return;
+	
 
 
 
@@ -96,7 +99,7 @@ void UInteract::GetFirstActorHit()
 	//		Actor->SetActorRotation(FRotator(32+add, 245+add, 300+add));
 	//}
 	
-}
+
 
 void UInteract::ViewpointInfo()
 {

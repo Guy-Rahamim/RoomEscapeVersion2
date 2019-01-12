@@ -30,8 +30,9 @@ void UGrabbingAndThrowing::TickComponent(float DeltaTime, ELevelTick TickType, F
 	
 	if (PhysicsHandle->GrabbedComponent)
 	{
-	
-		PhysicsHandle->SetTargetLocationAndRotation(HandsEnd,PlayerViewPointRotation);
+		if (PhysicsHandle->GrabbedComponent->GetMass()<20)
+		{PhysicsHandle->SetTargetLocationAndRotation(HandsEnd,PlayerViewPointRotation); }
+		else { PhysicsHandle->SetTargetLocationAndRotation(LineTraceEnd, PlayerViewPointRotation); }
 	}
 }
 

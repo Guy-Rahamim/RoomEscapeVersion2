@@ -56,7 +56,7 @@ private:
 
 	float ImpulsePush = 1200.f;
 	float TraceReach = 200.f;
-	float HandsReach = 200.f;
+	float HandsReach = 100.f;
 	float CrosshairReach = 15.f;
 	FHitResult Raycast();
 
