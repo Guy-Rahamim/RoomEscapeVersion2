@@ -33,8 +33,8 @@ void Uactivated::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 	{
 		if (Lever->UActivator::GetActive()==true)
 		{
-			UP.Broadcast();
-			Lever->UActivator::SetActive(false);
+			//UP.Broadcast();
+			//Lever->UActivator::SetActive(false);
 		}
 		else if (Lever->GetActive()==false) { DOWN.Broadcast(); }
 	}

@@ -29,7 +29,7 @@ void UBasicRespawn::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
 	Location = GetOwner()->GetActorLocation();
-	if (Location.Z <= -700.f)
+	if (Location.Z <= -50000.f)
 	GetOwner()->SetActorLocation(Spawn);
 
 }

@@ -39,8 +39,16 @@ void URespawnActivator::Respawner()
 
 		if (Activator->UActivator::GetActive())
 		{
+			if (Launcher != nullptr)
+			{
+				LauncherComponent = Launcher->FindComponentByClass<Uactivated>();
+				LauncherComponent->Uactivated::UP.Broadcast();
+				MoveHandle.Broadcast();
+				Activator->UActivator::SetActive(false);
+				return;
+			}
 			UE_LOG(LogTemp, Warning, TEXT("hello hello"))
-			Spawn.Broadcast();
+			SpawnSphere.Broadcast();
 			Activator->UActivator::SetActive(false);
 
 			return;

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Activator.h"
+#include "Activated.h"
 #include "RespawnActivator.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSpawn);
@@ -28,9 +29,16 @@ public:
 	//UPROPERTY(EditAnywhere)
 	//AActor* Handle = nullptr;
 	UActivator* Activator = nullptr;
+	Uactivated* LauncherComponent = nullptr;
 private:
 	UPROPERTY(BlueprintAssignable)
-	FSpawn Spawn;
+	FSpawn SpawnSphere;
+
+	UPROPERTY(BlueprintAssignable)
+		FSpawn MoveHandle;
+
+	UPROPERTY(EditAnywhere)
+		AActor* Launcher = nullptr;
 
 	void Respawner();
 };

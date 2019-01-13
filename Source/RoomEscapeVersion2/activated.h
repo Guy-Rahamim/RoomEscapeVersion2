@@ -29,11 +29,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	AActor* Actor = nullptr;
 	UActivator* Lever = nullptr;
-
-private:
 	UPROPERTY(BlueprintAssignable)
 		FLaunch UP;
 
 	UPROPERTY(BlueprintAssignable)
 		FLaunch DOWN;
+private:
+
 };
